@@ -36,8 +36,13 @@
 # CLEAN
 ./run_riviera.sh clean
 
+# COMPILE SUBMODULES
+grep -v '#' ../FPGA-LPLIB_UTIL/list/lib.lplib_util.lst | sed -e "s/^\.\./\.\.\/FPGA-LPLIB_UTIL/" > ../list/lib.lplib_util.lst
+./run_riviera.sh compile liblist lplib_util
+rm ../list/lib.lplib_util.lst
+
 # COMPILE
-./run_riviera.sh compile liblist lplib_basic
+./run_riviera.sh compile liblist lplib_alu
 
 # COMPILE FOR VERIFICATION
-./run_riviera.sh compile liblist lplib_basic_verif -2008
+./run_riviera.sh compile liblist lplib_alu_verif -2008
