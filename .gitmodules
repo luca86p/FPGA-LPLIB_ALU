@@ -1,0 +1,3 @@
+[submodule "FPGA-LPLIB_UTIL"]
+	path = FPGA-LPLIB_UTIL
+	url = https://github.com/luca86p/FPGA-LPLIB_UTIL.git
