@@ -1,0 +1,7 @@
+# -- lib.lplib_alu.lst
+# -- find ../hdl -type f
+
+
+# -- find ../hdl/adder -type f
+# ------------------------------------------------------------------------------
+../hdl/adder/rtl/add_comb.vhd

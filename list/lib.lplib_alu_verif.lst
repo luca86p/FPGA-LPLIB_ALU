@@ -1,0 +1,5 @@
+# -- lib.lplib_alu_verif.lst
+# -- find ../hdl -type f | grep tb_*
+
+# -- find ../hdl/adder -type f | grep tb_*
+# ------------------------------------------------------------------------------
