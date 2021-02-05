@@ -1,10 +1,10 @@
 -- =============================================================================
--- Whatis        : up/dw-counter with clear, enable, load and match features
+-- Whatis        : up/dw-delta-counter with clear, enable, load and match features
 -- Project       : FPGA-LPLIB_ALU
 -- -----------------------------------------------------------------------------
--- File          : counter_match.vhd
+-- File          : counter_delta.vhd
 -- Language      : VHDL-93
--- Module        : counter_match
+-- Module        : counter_delta
 -- Library       : lplib_alu
 -- -----------------------------------------------------------------------------
 -- Author(s)     : Luca Pilato <pilato[punto]lu[chiocciola]gmail[punto]com>
@@ -43,7 +43,7 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 
 
-entity counter_match is
+entity counter_delta is
     generic (
         RST_POL         : std_logic := '0';
         NBIT            : positive  := 8;
@@ -54,6 +54,7 @@ entity counter_match is
         rst             : in  std_logic;
         clr             : in  std_logic;
         updw            : in  std_logic;
+        delta           : in  std_logic_vector(NBIT-1 downto 0);
         load            : in  std_logic;
         load_val        : in  std_logic_vector(NBIT-1 downto 0);
         en              : in  std_logic;
@@ -61,13 +62,15 @@ entity counter_match is
         match           : out std_logic;
         cnt             : out std_logic_vector(NBIT-1 downto 0)
     );
-end entity counter_match;
+end entity counter_delta;
 
 
-architecture rtl of counter_match is
+architecture rtl of counter_delta is
 
     signal cnt_u        : unsigned(NBIT-1 downto 0);
     signal cnt_next_u   : unsigned(NBIT-1 downto 0);
+    
+    signal delta_u      : unsigned(NBIT-1 downto 0);
 
     signal match_s      : std_logic;
     signal match_p      : std_logic;
@@ -83,10 +86,12 @@ begin
         end if;
     end process proc_cnt;
 
+    delta_u <= unsigned(delta);
+
     cnt_next_u  <=  TO_UNSIGNED(0,NBIT) when clr='1' else
                     unsigned(load_val)  when load='1' else
-                    cnt_u+1             when en='1' and updw='0' else
-                    cnt_u-1             when en='1' and updw='1' else
+                    cnt_u + delta_u     when en='1' and updw='0' else
+                    cnt_u - delta_u     when en='1' and updw='1' else
                     cnt_u;
 
     cnt <= std_logic_vector(cnt_u);

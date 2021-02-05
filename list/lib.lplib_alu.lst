@@ -17,4 +17,4 @@
 ../hdl/counter/rtl/counter_clr.vhd
 ../hdl/counter/rtl/counter_updw.vhd
 ../hdl/counter/rtl/counter_match.vhd
-#../hdl/counter/rtl/counter_delta.vhd
+../hdl/counter/rtl/counter_delta.vhd
