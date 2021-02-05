@@ -8,3 +8,4 @@
 ../hdl/adder/rtl/add_sub_comb.vhd
 ../hdl/adder/rtl/inc_comb.vhd
 ../hdl/adder/rtl/dec_comb.vhd
+../hdl/adder/rtl/abs_c2_comb.vhd
