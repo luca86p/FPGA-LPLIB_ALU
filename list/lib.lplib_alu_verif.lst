@@ -1,5 +1,6 @@
 # -- lib.lplib_alu_verif.lst
 # -- find ../hdl -type f | grep tb_*
 
-# -- find ../hdl/adder -type f | grep tb_*
+# -- find ../hdl/counter -type f | grep tb_*
 # ------------------------------------------------------------------------------
+../hdl/counter/tb/tb_counter_basic.vhd

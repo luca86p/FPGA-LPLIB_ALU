@@ -48,7 +48,7 @@ printline '#'
 # --------------------------------
 funtic
 #
-./run_riviera.sh simulate lplib_basic_verif nogui
+./run_riviera.sh simulate lplib_alu_verif nogui
 #
 echo "Simulation time $(($(funtoc)/1000)) s"
 
