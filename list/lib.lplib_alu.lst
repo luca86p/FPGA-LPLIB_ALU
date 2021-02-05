@@ -6,3 +6,5 @@
 # ------------------------------------------------------------------------------
 ../hdl/adder/rtl/add_comb.vhd
 ../hdl/adder/rtl/add_sub_comb.vhd
+../hdl/adder/rtl/inc_comb.vhd
+../hdl/adder/rtl/dec_comb.vhd
