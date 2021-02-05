@@ -5,3 +5,4 @@
 # -- find ../hdl/adder -type f
 # ------------------------------------------------------------------------------
 ../hdl/adder/rtl/add_comb.vhd
+../hdl/adder/rtl/add_sub_comb.vhd
