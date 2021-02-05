@@ -62,10 +62,8 @@ run -all
 # ----------------------------------------
 # run 100 us
 # vcd file dump.vcd
-# vcd add -r sim:/tb/i_uut/i_top_level_plato/i_grpci2/*
-# vcd add -r sim:/tb/i_uut/i_top_level_plato/i_ahbctrl/*
-# vcd add /tb/i_uut/i_top_level_plato/i_grpci2/pcii
-# vcd add -r sim:/tb/i_uut/i_top_level_plato
+# vcd add -r sim:/tb/i_uut/i_top_level/i_block/*
+# vcd add /tb/i_uut/i_top_level/i_block/signal
 # vcd on
 # run 100 us
 # vcd off

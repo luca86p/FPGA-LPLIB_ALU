@@ -52,11 +52,11 @@ if ![file exists ${this_map}] {
 
 # removes all units in library
 # -------------------------------------------
-# adel -lib plato_fpga -all
+# adel -lib ${lib} -all
 
 # detach lib
 # -------------------------------------------
-# amap -del plato_fpga
+# amap -del ${lib}
 
 # Process data file per lines
 # -------------------------------------------
