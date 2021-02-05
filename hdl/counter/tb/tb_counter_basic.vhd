@@ -15,6 +15,7 @@
 -- Description
 --
 --  Auto-checking tb to verify the equivalence of counter_basic architectures
+--  Auto-checking process to verify the correct count
 -- 
 -- -----------------------------------------------------------------------------
 -- Dependencies
@@ -73,7 +74,8 @@ architecture beh of tb is
 
     -- Check Process
     -- ----------------------------------------
-    signal err_counter  : integer   := 0;
+    signal err_counter          : integer   := 0;
+    signal check_err_counter    : integer   := 0;
 
 
     -- Constant
@@ -151,7 +153,7 @@ begin
     -- Drive Process
     -- ----------------------------------------    
     proc_drive: process
-        constant SIM_TIME   : time := 10 ms;
+        constant SIM_TIME   : time := 0.1 ms;
     begin
         -- ========
         tcase       <= 0;
@@ -182,11 +184,14 @@ begin
         tcase   <= -1;
         wait until rising_edge(clk);
         --
-        wait for 666 us;
+        wait for 333 ns;
         wait until rising_edge(clk);
         rst        <= '0';
         wait for 333 ns;
         en_clk     <= '0';
+        wait for 333 ns;
+        --
+        err_counter <= err_counter + check_err_counter;
         wait for 333 ns;
         --
         if err_counter /= 0 then
@@ -204,6 +209,38 @@ begin
         --
         wait;
     end process proc_drive;
+
+
+    -- Check Process (on clk falling edge)
+    -- ----------------------------------------
+    proc_check: process(clk, rst)
+        variable exp_cnt_1_i    : integer := 0;
+        variable exp_cnt_2_i    : integer := 0;
+        --
+        variable check_err      : integer := 0;
+    begin
+        if tcase=-1 then -- update the error counter
+            check_err_counter   <= check_err;
+        elsif falling_edge(clk) and rst /= RST_POL then
+            if en='1' then
+                --
+                if unsigned(cnt_1) /= exp_cnt_1_i then
+                    REPORT "expected cnt_1 " & integer'image(exp_cnt_1_i) & " got " & integer'image(TO_INTEGER(unsigned(cnt_1)))
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+                exp_cnt_1_i := (exp_cnt_1_i + 1) mod 2**NBIT;
+                --
+                if unsigned(cnt_2) /= exp_cnt_2_i then
+                    REPORT "expected cnt_2 " & integer'image(exp_cnt_2_i) & " got " & integer'image(TO_INTEGER(unsigned(cnt_2)))
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+                exp_cnt_2_i := (exp_cnt_2_i + 1) mod 2**NBIT;
+                --
+            end if;
+        end if;
+    end process proc_check;
 
 
 end beh;
