@@ -2,7 +2,7 @@
 -- Whatis        : testbench
 -- Project       : 
 -- -----------------------------------------------------------------------------
--- File          : tb_counter_basic.vhd
+-- File          : tb_counter_clr.vhd
 -- Language      : VHDL-93
 -- Module        : tb
 -- Library       : lplib_alu_verif
@@ -14,7 +14,7 @@
 -- -----------------------------------------------------------------------------
 -- Description
 --
---  Auto-checking tb to verify the equivalence of counter_basic architectures
+--  Auto-checking tb to verify the equivalence of counter_clr architectures
 --  Auto-checking process to verify the correct count
 -- 
 -- -----------------------------------------------------------------------------
@@ -86,6 +86,7 @@ architecture beh of tb is
     -- Signals 
     -- ----------------------------------------
     signal en           : std_logic;
+    signal clr          : std_logic;
     signal cnt_1        : std_logic_vector(NBIT-1 downto 0);
     signal cnt_2        : std_logic_vector(NBIT-1 downto 0);
 
@@ -116,7 +117,7 @@ begin
 
     -- Unit(s) Under Test
     -- ----------------------------------------
-    i_counter_basic_1: entity lplib_alu.counter_basic(rtl)
+    i_counter_clr_1: entity lplib_alu.counter_clr(rtl)
     generic map (
         RST_POL     => RST_POL  ,
         NBIT        => NBIT
@@ -124,11 +125,12 @@ begin
     port map (
         clk         => clk      ,
         rst         => rst      ,
+        clr         => clr      ,
         en          => en       ,
         cnt         => cnt_1
     );
 
-    i_counter_basic_2: entity lplib_alu.counter_basic(rtl2)
+    i_counter_clr_2: entity lplib_alu.counter_clr(rtl2)
     generic map (
         RST_POL     => RST_POL  ,
         NBIT        => NBIT
@@ -136,6 +138,7 @@ begin
     port map (
         clk         => clk      ,
         rst         => rst      ,
+        clr         => clr      ,
         en          => en       ,
         cnt         => cnt_2
     );
@@ -145,14 +148,14 @@ begin
     -- HARD equivalency
     -- ----------------------------------------   
     ASSERT cnt_1=cnt_2
-        REPORT "counter_basic(rtl) NOT EQUAL to counter_basic(rtl2)"
+        REPORT "counter_clr(rtl) NOT EQUAL to counter_clr(rtl2)"
             SEVERITY FAILURE; 
 
 
     -- Drive Process
     -- ----------------------------------------    
     proc_drive: process
-        constant SIM_TIME   : time := 0.1 ms;
+        constant BLANK_TIME : time := 0.1 ms;
     begin
         -- ========
         tcase       <= 0;
@@ -161,6 +164,7 @@ begin
         rst         <= RST_POL;
         --
         en          <= '0';
+        clr         <= '0';
         --
         wait for 333 ns;
         en_clk     <= '1';
@@ -176,7 +180,22 @@ begin
         --
         en          <= '1';
         --
-        wait for SIM_TIME;
+        wait for BLANK_TIME;
+        wait until rising_edge(clk);
+        --
+        --
+        clr         <= '1';
+        wait until rising_edge(clk);
+        clr         <= '0';
+        wait until rising_edge(clk);
+        --
+        --
+        en          <= '0';
+        wait until rising_edge(clk);
+        en          <= '1';
+        wait until rising_edge(clk);
+        --
+        wait for BLANK_TIME;
         wait until rising_edge(clk);
         --
         -- ======== Power Off
