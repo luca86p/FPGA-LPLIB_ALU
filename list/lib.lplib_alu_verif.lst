@@ -3,5 +3,6 @@
 
 # -- find ../hdl/counter -type f | grep tb_*
 # ------------------------------------------------------------------------------
-../hdl/counter/tb/tb_counter_basic.vhd
-../hdl/counter/tb/tb_counter_clr.vhd
+#../hdl/counter/tb/tb_counter_basic.vhd
+#../hdl/counter/tb/tb_counter_clr.vhd
+../hdl/counter/tb/tb_counter_updw.vhd

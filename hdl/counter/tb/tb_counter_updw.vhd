@@ -244,7 +244,7 @@ begin
             end if;
             --
             -- prepare next expected value
-            if clr'1' then
+            if clr='1' then
                 --
                 exp_cnt_i   := 0;
                 --

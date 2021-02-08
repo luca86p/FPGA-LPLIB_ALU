@@ -254,7 +254,7 @@ begin
                 check_err := check_err + 1;
             end if;
             --
-            if clr'1' then
+            if clr='1' then
                 --
                 exp_cnt_1_i := 0;
                 exp_cnt_2_i := 0;
