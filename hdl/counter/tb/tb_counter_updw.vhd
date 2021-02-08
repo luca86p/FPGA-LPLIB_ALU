@@ -2,7 +2,7 @@
 -- Whatis        : testbench
 -- Project       : 
 -- -----------------------------------------------------------------------------
--- File          : tb_counter_clr.vhd
+-- File          : tb_counter_updw.vhd
 -- Language      : VHDL-93
 -- Module        : tb
 -- Library       : lplib_alu_verif
@@ -14,7 +14,6 @@
 -- -----------------------------------------------------------------------------
 -- Description
 --
---  Auto-checking tb to verify the equivalence of counter_clr architectures
 --  Auto-checking process to verify the correct count
 -- 
 -- -----------------------------------------------------------------------------
@@ -85,10 +84,10 @@ architecture beh of tb is
 
     -- Signals 
     -- ----------------------------------------
-    signal en           : std_logic;
     signal clr          : std_logic;
-    signal cnt_1        : std_logic_vector(NBIT-1 downto 0);
-    signal cnt_2        : std_logic_vector(NBIT-1 downto 0);
+    signal en           : std_logic;
+    signal updw         : std_logic;
+    signal cnt          : std_logic_vector(NBIT-1 downto 0);
 
 
 begin
@@ -117,7 +116,7 @@ begin
 
     -- Unit(s) Under Test
     -- ----------------------------------------
-    i_counter_clr_1: entity lplib_alu.counter_clr(rtl)
+    i_counter_updw: entity lplib_alu.counter_updw(rtl)
     generic map (
         RST_POL     => RST_POL  ,
         NBIT        => NBIT
@@ -127,29 +126,9 @@ begin
         rst         => rst      ,
         clr         => clr      ,
         en          => en       ,
-        cnt         => cnt_1
+        updw        => updw     ,
+        cnt         => cnt
     );
-
-    i_counter_clr_2: entity lplib_alu.counter_clr(rtl2)
-    generic map (
-        RST_POL     => RST_POL  ,
-        NBIT        => NBIT
-    )
-    port map (
-        clk         => clk      ,
-        rst         => rst      ,
-        clr         => clr      ,
-        en          => en       ,
-        cnt         => cnt_2
-    );
-
-
-
-    -- HARD equivalency
-    -- ----------------------------------------   
-    ASSERT cnt_1=cnt_2
-        REPORT "counter_clr(rtl) NOT EQUAL to counter_clr(rtl2)"
-            SEVERITY FAILURE; 
 
 
     -- Drive Process
@@ -163,8 +142,9 @@ begin
         en_clk      <= '0';
         rst         <= RST_POL;
         --
-        en          <= '0';
         clr         <= '0';
+        en          <= '0';
+        updw        <= '0';
         --
         wait for 333 ns;
         en_clk     <= '1';
@@ -178,7 +158,21 @@ begin
         tcase   <= 1;
         wait until rising_edge(clk);
         --
+        clr         <= '0';
         en          <= '1';
+        updw        <= '0';
+        --
+        wait for BLANK_TIME;
+        wait until rising_edge(clk);
+        --
+        --
+        clr         <= '1';
+        wait until rising_edge(clk);
+        clr         <= '0';
+        wait until rising_edge(clk);
+        --
+        --
+        updw        <= '1';
         --
         wait for BLANK_TIME;
         wait until rising_edge(clk);
@@ -195,8 +189,10 @@ begin
         en          <= '1';
         wait until rising_edge(clk);
         --
+        --
         wait for BLANK_TIME;
         wait until rising_edge(clk);
+        --
         --
         -- ======== Power Off
         tcase   <= -1;
@@ -232,8 +228,7 @@ begin
     -- Check Process (on clk falling edge)
     -- ----------------------------------------
     proc_check: process(clk, rst)
-        variable exp_cnt_1_i    : integer := 0;
-        variable exp_cnt_2_i    : integer := 0;
+        variable exp_cnt_i  : integer := 0;
         --
         variable check_err      : integer := 0;
     begin
@@ -242,28 +237,27 @@ begin
         elsif falling_edge(clk) and rst /= RST_POL then
             --
             -- check
-            if unsigned(cnt_1) /= exp_cnt_1_i then
-                REPORT "expected cnt_1 " & integer'image(exp_cnt_1_i) & " got " & integer'image(TO_INTEGER(unsigned(cnt_1)))
+            if unsigned(cnt) /= exp_cnt_i then
+                REPORT "expected cnt " & integer'image(exp_cnt_i) & " got " & integer'image(TO_INTEGER(unsigned(cnt)))
                 SEVERITY ERROR;
                 check_err := check_err + 1;
             end if;
             --
-            if unsigned(cnt_2) /= exp_cnt_2_i then
-                REPORT "expected cnt_2 " & integer'image(exp_cnt_2_i) & " got " & integer'image(TO_INTEGER(unsigned(cnt_2)))
-                SEVERITY ERROR;
-                check_err := check_err + 1;
-            end if;
-            --
+            -- prepare next expected value
             if clr'1' then
                 --
-                exp_cnt_1_i := 0;
-                exp_cnt_2_i := 0;
+                exp_cnt_i   := 0;
                 --
             elsif en='1' then
-                --
-                exp_cnt_1_i := (exp_cnt_1_i + 1) mod 2**NBIT;
-                exp_cnt_2_i := (exp_cnt_2_i + 1) mod 2**NBIT;
-                --
+                if updw='0' then
+                    --
+                    exp_cnt_i   := (exp_cnt_i + 1) mod 2**NBIT;
+                    --
+                else
+                    --
+                    exp_cnt_i   := (exp_cnt_i - 1) mod 2**NBIT;
+                    --
+                end if;
             end if;
             --
             --
