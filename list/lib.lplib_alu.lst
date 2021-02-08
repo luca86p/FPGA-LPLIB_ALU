@@ -24,3 +24,9 @@
 # ------------------------------------------------------------------------------
 ../hdl/shifter/rtl/shift_reg.vhd
 ../hdl/shifter/rtl/shift_barrel.vhd
+
+
+# -- find ../hdl/lfsr -type f
+# ------------------------------------------------------------------------------
+../hdl/lfsr/rtl/lfsr_fibonacci.vhd
+../hdl/lfsr/rtl/lfsr_galois.vhd
