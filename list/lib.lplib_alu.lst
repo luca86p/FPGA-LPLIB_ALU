@@ -18,3 +18,9 @@
 ../hdl/counter/rtl/counter_updw.vhd
 ../hdl/counter/rtl/counter_match.vhd
 ../hdl/counter/rtl/counter_delta.vhd
+
+
+# -- find ../hdl/shifter -type f
+# ------------------------------------------------------------------------------
+../hdl/shifter/rtl/shift_reg.vhd
+../hdl/shifter/rtl/shift_barrel.vhd
