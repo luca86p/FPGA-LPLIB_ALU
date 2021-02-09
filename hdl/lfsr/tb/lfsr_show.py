@@ -20,7 +20,7 @@
 #   # Example to see x^{3}+x^{1}+1
 #   python lfsr_show.py B
 #
-#       LFSR steps with polynomial [3, 1, 0]
+#       LFSR polynomial [3, 1, 0] = x^3 + x^1 + 1
 #          0 100
 #          1 110
 #          2 111
@@ -76,11 +76,16 @@ def main():
         # print(poly)
     poly = [i for i, x in enumerate(poly) if x == 1] # all the occurrences
     poly.sort(reverse = True)
-    print("LFSR steps with polynomial", str(poly))
+    print("LFSR polynomial", str(poly), end=' = ')
+    for i, n in enumerate(poly):
+        if n != 0:
+            print("x^" + str(n), end=' + ')
+        else:
+            print("1")
 
     n = max(poly)
     
-    x = 1 # init
+    x = 2**(n-1) # init
     y = str(bin(x))[2:].rjust(n,'0')
     print("{:4d} {}".format(0,y[::-1]))
 
@@ -89,7 +94,7 @@ def main():
         x = lfsr_step(x,poly)
         y = str(bin(x))[2:].rjust(n,'0')
         print("{:4d} {}".format(i,y[::-1]))
-        if x == 1:
+        if x == 2**(n-1):
             print("sequence length", i)
             if i == 2**n-1:
                 print("Maximum-length polynomial!")
