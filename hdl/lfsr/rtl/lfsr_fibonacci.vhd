@@ -33,11 +33,15 @@
 -- t0 always 1 for feedback.
 -- tN indicates the grade N of the polynomial.
 --  e.g. [7 6 0] is the 7-th grade polynomial x^7 + x^6 + 1.
+--
 -- A maximum-length LFSR produces an m-sequence through all possible 2^m−1 states,
 --  except the state where all bits are zero. A zero seed won't move.
--- A maximum-length "mirror" sequence should come with "mirror" taps: m-taps.
---  e.g. [7 6 0] ==(7-taps)==> [0 1 7] ==(mirror)==> [7 1 0]
---      x^7 + x^6 + 1   -- ---------------->  x^7 + x + 1
+--
+-- A maximum-length "mirror" sequence should come with "mirror" tap:
+--  e.g. [7 6 0] ==(7-taps mirroring)==> 7-[7 6 0] ==> [0 1 7] 
+--                            ==( flip to reorder )==> [7 1 0]
+--     x^7 + x^6 + 1   ------------------------>     x^7 + x + 1
+--
 --  e.g the [7 6 0] polynomial is defined by taps="110_0000"
 --
 -- "usexnor" produce a complement of the state of an LFSR.
