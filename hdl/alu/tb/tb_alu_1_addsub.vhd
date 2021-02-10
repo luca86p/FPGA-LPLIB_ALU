@@ -15,6 +15,7 @@
 -- Description
 --
 --  Self-checking testbench
+--  Dump process
 -- 
 -- -----------------------------------------------------------------------------
 -- Dependencies
