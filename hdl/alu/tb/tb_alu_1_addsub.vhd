@@ -480,7 +480,7 @@ begin
     -- ----------------------------------------
     proc_dump: process(clk, rst)
         variable wrline     : line ;
-	    variable clk_cnt    : integer := 0;
+        variable clk_cnt    : integer := 0;
     begin    
         if falling_edge(clk) and rst /= RST_POL then
             clk_cnt := clk_cnt+1;
@@ -489,31 +489,31 @@ begin
             write(wrline, string'(" "));
             --
             --write(wrline, integer'image(clk_cnt));
-	        --write(wrline, string'(" "));
+            --write(wrline, string'(" "));
             --
-	        write(wrline, string'(" alu_1_op1 0x"));
-	        hwrite(wrline, alu_1_op1);
-	        write(wrline, string'(" alu_1_op2 0x"));
-	        hwrite(wrline, alu_1_op2);
-	        write(wrline, string'(" alu_1_cbin 0x"));
-	        write(wrline, alu_1_cbin);
-	        write(wrline, string'(" alu_1_cmd_add 0x"));
-	        write(wrline, alu_1_cmd_add);
-	        write(wrline, string'(" alu_1_cmd_sub 0x"));
-	        write(wrline, alu_1_cmd_sub);
-	        write(wrline, string'(" alu_1_y 0x"));
-	        hwrite(wrline, alu_1_y);
-	        write(wrline, string'(" alu_1_z 0x"));
-	        write(wrline, alu_1_z);
-	        write(wrline, string'(" alu_1_c 0x"));
-	        write(wrline, alu_1_c);
-	        write(wrline, string'(" alu_1_v 0x"));
-	        write(wrline, alu_1_v);
-	        write(wrline, string'(" alu_1_s 0x"));
-	        write(wrline, alu_1_s);
+            write(wrline, string'(" alu_1_op1 0x"));
+            hwrite(wrline, alu_1_op1);
+            write(wrline, string'(" alu_1_op2 0x"));
+            hwrite(wrline, alu_1_op2);
+            write(wrline, string'(" alu_1_cbin 0x"));
+            write(wrline, alu_1_cbin);
+            write(wrline, string'(" alu_1_cmd_add 0x"));
+            write(wrline, alu_1_cmd_add);
+            write(wrline, string'(" alu_1_cmd_sub 0x"));
+            write(wrline, alu_1_cmd_sub);
+            write(wrline, string'(" alu_1_y 0x"));
+            hwrite(wrline, alu_1_y);
+            write(wrline, string'(" alu_1_z 0x"));
+            write(wrline, alu_1_z);
+            write(wrline, string'(" alu_1_c 0x"));
+            write(wrline, alu_1_c);
+            write(wrline, string'(" alu_1_v 0x"));
+            write(wrline, alu_1_v);
+            write(wrline, string'(" alu_1_s 0x"));
+            write(wrline, alu_1_s);
             --
             writeline(DUMP_F, wrline);
-	    end if;
+        end if;
     end process proc_dump;
 
 end beh;

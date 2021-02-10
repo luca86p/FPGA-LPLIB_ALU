@@ -35,3 +35,4 @@
 # -- find ../hdl/alu -type f
 # ------------------------------------------------------------------------------
 ../hdl/alu/rtl/alu_1_addsub.vhd
+../hdl/alu/rtl/alu_2_4fun.vhd
