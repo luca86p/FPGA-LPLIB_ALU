@@ -83,12 +83,6 @@ architecture beh of tb is
     signal check_err_counter    : integer   := 0;
 
 
-    -- Dump Process
-    -- ----------------------------------------
-    constant DUMP_FNAME  : string := "dump.log";
-    file DUMP_F : TEXT open write_mode is DUMP_FNAME;
-
-
     -- Constant
     -- ----------------------------------------
     constant N       : positive := 4;

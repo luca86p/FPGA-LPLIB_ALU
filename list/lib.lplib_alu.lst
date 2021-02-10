@@ -36,3 +36,5 @@
 # ------------------------------------------------------------------------------
 ../hdl/alu/rtl/alu_1_addsub.vhd
 ../hdl/alu/rtl/alu_2_4fun.vhd
+../hdl/alu/rtl/alu_3_5cmd.vhd
+../hdl/alu/rtl/alu_4_8cmd.vhd
