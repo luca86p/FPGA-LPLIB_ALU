@@ -39,3 +39,4 @@
 ../hdl/alu/rtl/alu_3_5cmd.vhd
 ../hdl/alu/rtl/alu_4_8cmd.vhd
 ../hdl/alu/rtl/alu_5_11cmd.vhd
+../hdl/alu/rtl/alu_6_8fun.vhd
