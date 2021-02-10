@@ -12,4 +12,9 @@
 
 # -- find ../hdl/lfsr -type f | grep tb_
 # ------------------------------------------------------------------------------
-../hdl/lfsr/tb/tb_lfsr.vhd
+#runc../hdl/lfsr/tb/tb_lfsr.vhd
+
+
+# -- find ../hdl/alu -type f | grep tb_
+# ------------------------------------------------------------------------------
+../hdl/alu/tb/tb_alu_1_addsub.vhd

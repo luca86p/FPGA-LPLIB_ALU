@@ -287,7 +287,7 @@ begin
             --
             check_err_counter   <= check_err;
             --
-        if falling_edge(clk) and rst /= RST_POL then
+        elsif falling_edge(clk) and rst /= RST_POL then
             --
             --
             -- prepare the integer variables
@@ -371,94 +371,93 @@ begin
                 ref_alu_1_y_int :=  aux_int mod 2**N;
                 --
                 if unsigned(alu_1_y)=0 then
-                    expected_alu_1_z := '1';
+                    ref_alu_1_z     := '1';
                 else
-                    expected_alu_1_z := '0';
+                    ref_alu_1_z     := '0';
                 end if;
                 --
-                v_int_check := TO_INTEGER(unsigned(alu_1_op1)) - TO_INTEGER(unsigned(alu_1_op2)) - alu_1_cbin_int;
-                if v_int_check < 0 then
-                    expected_alu_1_c := '1';
+                if aux_int < 0 then
+                    ref_alu_1_c     := '1';
                 else
-                    expected_alu_1_c := '0';
+                    ref_alu_1_c     := '0';
                 end if;
                 --
-                v_int_check := TO_INTEGER(signed(alu_1_op1)) - TO_INTEGER(signed(alu_1_op2)) - alu_1_cbin_int;
-                if v_int_check < -(2**(N-1)) or v_int_check > (2**(N-1))-1 then
-                    expected_alu_1_v := '1';
+                aux_int := TO_INTEGER(signed(alu_1_op1)) - TO_INTEGER(signed(alu_1_op2)) - alu_1_cbin_int;
+                if aux_int < -(2**(N-1)) or aux_int > (2**(N-1))-1 then
+                    ref_alu_1_v     := '1';
                 else
-                    expected_alu_1_v := '0';
+                    ref_alu_1_v     := '0';
                 end if;
                 --
-                v_int_check := TO_INTEGER(signed(alu_1_op1)) - TO_INTEGER(signed(alu_1_op2)) - alu_1_cbin_int;
-                if v_int_check mod 2**N >= 2**(N-1) then
-                    expected_alu_1_s := '1';
+                if aux_int mod 2**N >= 2**(N-1) then
+                    ref_alu_1_s     := '1';
                 else
-                    expected_alu_1_s := '0';
+                    ref_alu_1_s     := '0';
                 end if;
                 --
                 -- check
-                if alu_1_y /= expected_alu_1_y then
-                    REPORT "expected_alu_1_y " & integer'image(TO_INTEGER(signed(expected_alu_1_y))) & " got " & integer'image(TO_INTEGER(signed(alu_1_y)))
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_y_int /= ref_alu_1_y_int then
+                    REPORT "expected alu_1_y " & integer'image(ref_alu_1_y_int) & " got " & integer'image(alu_1_y_int)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
-                if alu_1_z /= expected_alu_1_z then
-                    REPORT "expected_alu_1_z " & std_logic'image(expected_alu_1_z) & " got " & std_logic'image(alu_1_z)
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_z /= ref_alu_1_z then
+                    REPORT "expected alu_1_z " & std_logic'image(ref_alu_1_z) & " got " & std_logic'image(alu_1_z)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
-                if alu_1_c /= expected_alu_1_c then
-                    REPORT "expected_alu_1_c " & std_logic'image(expected_alu_1_c) & " got " & std_logic'image(alu_1_c)
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_c /= ref_alu_1_c then
+                    REPORT "expected alu_1_c " & std_logic'image(ref_alu_1_c) & " got " & std_logic'image(alu_1_c)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
-                if alu_1_v /= expected_alu_1_v then
-                    REPORT "expected_alu_1_v " & std_logic'image(expected_alu_1_v) & " got " & std_logic'image(alu_1_v)
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_v /= ref_alu_1_v then
+                    REPORT "expected alu_1_v " & std_logic'image(ref_alu_1_v) & " got " & std_logic'image(alu_1_v)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
-                if alu_1_s /= expected_alu_1_s then
-                    REPORT "expected_alu_1_s " & std_logic'image(expected_alu_1_s) & " got " & std_logic'image(alu_1_s)
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_s /= ref_alu_1_s then
+                    REPORT "expected alu_1_s " & std_logic'image(ref_alu_1_s) & " got " & std_logic'image(alu_1_s)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
             --
             --
             --
-            --
+            -- ======== check operation: null
             else
-                -- expected ref
-                expected_alu_1_y := (others=>'0');
-                expected_alu_1_z := '1';
-                expected_alu_1_c := '0';
-                expected_alu_1_v := '0';
-                expected_alu_1_s := '0';
+                -- expected references
+                ref_alu_1_y_int := 0;
+                ref_alu_1_z     := '1';
+                ref_alu_1_c     := '0';
+                ref_alu_1_v     := '0';
+                ref_alu_1_s     := '0';
+                --
                 -- check
-                if alu_1_y /= expected_alu_1_y then
-                    REPORT "expected_alu_1_y " & integer'image(TO_INTEGER(signed(expected_alu_1_y))) & " got " & integer'image(TO_INTEGER(signed(alu_1_y)))
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_y_int /= ref_alu_1_y_int then
+                    REPORT "expected alu_1_y " & integer'image(ref_alu_1_y_int) & " got " & integer'image(alu_1_y_int)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
-                if alu_1_z /= expected_alu_1_z then
-                    REPORT "expected_alu_1_z " & std_logic'image(expected_alu_1_z) & " got " & std_logic'image(alu_1_z)
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_z /= ref_alu_1_z then
+                    REPORT "expected alu_1_z " & std_logic'image(ref_alu_1_z) & " got " & std_logic'image(alu_1_z)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
-                if alu_1_c /= expected_alu_1_c then
-                    REPORT "expected_alu_1_c " & std_logic'image(expected_alu_1_c) & " got " & std_logic'image(alu_1_c)
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_c /= ref_alu_1_c then
+                    REPORT "expected alu_1_c " & std_logic'image(ref_alu_1_c) & " got " & std_logic'image(alu_1_c)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
-                if alu_1_v /= expected_alu_1_v then
-                    REPORT "expected_alu_1_v " & std_logic'image(expected_alu_1_v) & " got " & std_logic'image(alu_1_v)
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_v /= ref_alu_1_v then
+                    REPORT "expected alu_1_v " & std_logic'image(ref_alu_1_v) & " got " & std_logic'image(alu_1_v)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
-                if alu_1_s /= expected_alu_1_s then
-                    REPORT "expected_alu_1_s " & std_logic'image(expected_alu_1_s) & " got " & std_logic'image(alu_1_s)
-                        SEVERITY ERROR;
-                    err_cnt := err_cnt+1;
+                if alu_1_s /= ref_alu_1_s then
+                    REPORT "expected alu_1_s " & std_logic'image(ref_alu_1_s) & " got " & std_logic'image(alu_1_s)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
                 end if;
                 --
                 --
@@ -470,8 +469,6 @@ begin
             --
             --
         end if;
-
-        err_counter <= err_cnt;
 
     end process proc_check;
 
@@ -486,8 +483,10 @@ begin
     begin    
         if falling_edge(clk) and rst /= RST_POL then
             clk_cnt := clk_cnt+1;
-            write(wrline, NOW);
-	        write(wrline, string'(" "));
+            --
+            write(wrline, NOW); -- runtime stamp
+            write(wrline, string'(" "));
+            --
             --write(wrline, integer'image(clk_cnt));
 	        --write(wrline, string'(" "));
             --
