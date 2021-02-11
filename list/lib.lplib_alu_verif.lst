@@ -18,4 +18,5 @@
 # -- find ../hdl/alu -type f | grep tb_
 # ------------------------------------------------------------------------------
 #../hdl/alu/tb/tb_alu_1_addsub.vhd
-../hdl/alu/tb/tb_alu_2_4fun.vhd
+#../hdl/alu/tb/tb_alu_2_4fun.vhd
+../hdl/alu/tb/tb_alu_8_16cmd_seq.vhd

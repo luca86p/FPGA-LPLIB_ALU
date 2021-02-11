@@ -409,7 +409,7 @@ begin
         wait until rising_edge(clk);
         --
         --
-        -- ======== test all func each ops: cbin 0
+        -- ======== test all func each ops: cbin 1
         tcase           <= 2;
         wait until rising_edge(clk);
         --
