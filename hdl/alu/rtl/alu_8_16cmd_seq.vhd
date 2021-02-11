@@ -252,6 +252,7 @@ begin
 
     -- multiplier adder
     -- ---------------------------------
+    mul_sum_cchain(0)   <= '0';
     gen_mul_adder: for i in 0 to N-1 generate
         mul_sum(i)          <= mul_sum_op1(i) xor mul_sum_op2(i) xor mul_sum_cchain(i);
         mul_sum_cchain(i+1) <= (mul_sum_op1(i) and mul_sum_op2(i)) or ((mul_sum_op1(i) xor mul_sum_op2(i)) and mul_sum_cchain(i));
