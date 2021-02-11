@@ -265,7 +265,7 @@ architecture beh of tb is
         --
         check_err := 0;
         --
-        -- ======== fun independent checks
+        -- ======== cmd independent checks
         --
         -- zero flag
         if TO_INTEGER(unsigned(alu_8_y)) = 0 then
@@ -274,9 +274,130 @@ architecture beh of tb is
                 SEVERITY ERROR;
                 check_err := check_err + 1;
             end if;
+        else
+            if alu_8_z /= '0' then
+                REPORT "expected alu_8_z '0' got " & std_logic'image(alu_8_z)
+                SEVERITY ERROR;
+                check_err := check_err + 1;
+            end if;
+        end if;
+        --
+        -- ======== cmd dependent checks
+        --
+        --
+        if alu_8_cmd_join(IDX_ADD ) then
+            --
+            -- unconstrained unsigned operation
+            aux_int := TO_INTEGER(unsigned(alu_8_op1)) + TO_INTEGER(unsigned(alu_8_op2));
+            --
+            -- if alu_8_cbin='1' then
+            --     aux_int := aux_int + 1;
+            -- end if;
+            --
+            -- carry flag
+            if aux_int > (2**N)-1 then
+                if alu_8_c /= '1' then
+                    REPORT "expected alu_8_c '1' got " & std_logic'image(alu_8_c)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            else
+                if alu_8_c /= '0' then
+                    REPORT "expected alu_8_c '0' got " & std_logic'image(alu_8_c)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            end if;
+            --
+            -- N-bit operation
+            aux_int :=  aux_int mod 2**N;
+            --
+            -- correct result
+            if TO_INTEGER(unsigned(alu_8_y)) /= aux_int then
+                REPORT "expected alu_8_y " & integer'image(aux_int) & " got " & integer'image(TO_INTEGER(unsigned(alu_8_y)))
+                SEVERITY ERROR;
+                check_err := check_err + 1;
+            end if;
+            --
+            -- sign flag
+            if TO_INTEGER(unsigned(alu_8_y)) >= 2**(N-1) then
+                if alu_8_s /= '1' then
+                    REPORT "expected alu_8_s '1' got " & std_logic'image(alu_8_s)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            else
+                if alu_8_s /= '0' then
+                    REPORT "expected alu_8_s '0' got " & std_logic'image(alu_8_s)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            end if;
+            --
+            -- unconstrained signed operation
+            aux_int :=  TO_INTEGER(signed(alu_8_op1)) + TO_INTEGER(signed(alu_8_op2));
+            --
+            -- if alu_8_cbin='1' then
+            --     aux_int     := aux_int + 1;
+            -- end if;
+            --
+            -- c2 overflow flag
+            if aux_int < -(2**(N-1)) or aux_int > (2**(N-1))-1 then
+                if alu_8_v /= '1' then
+                    REPORT "expected alu_8_v '1' got " & std_logic'image(alu_8_v)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            else
+                if alu_8_v /= '0' then
+                    REPORT "expected alu_8_v '0' got " & std_logic'image(alu_8_v)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            end if;
+            --
+            -- even parity flag
+            aux_int := 0;
+            for i in alu_8_y'range loop
+                if alu_8_y(i)='1' then
+                    aux_int := aux_int + 1;
+                end if;
+            end loop;
+            if (aux_int mod 2)=0 then
+                if alu_8_p /= '0' then
+                    REPORT "expected alu_8_p '0' got " & std_logic'image(alu_8_p)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            else
+                if alu_8_p /= '1' then
+                    REPORT "expected alu_8_p '1' got " & std_logic'image(alu_8_p)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            end if;
+            --
         end if;
         --
         --
+        --
+        --
+        --
+        -- alu_8_cmd_join(IDX_ADDC)
+        -- alu_8_cmd_join(IDX_SUB )
+        -- alu_8_cmd_join(IDX_SUBB)
+        -- alu_8_cmd_join(IDX_MUL )
+        -- alu_8_cmd_join(IDX_AND )
+        -- alu_8_cmd_join(IDX_OR  )
+        -- alu_8_cmd_join(IDX_XOR )
+        -- alu_8_cmd_join(IDX_XNOR)
+        -- alu_8_cmd_join(IDX_SLL )
+        -- alu_8_cmd_join(IDX_SRL )
+        -- alu_8_cmd_join(IDX_SRA )
+        -- alu_8_cmd_join(IDX_RL  )
+        -- alu_8_cmd_join(IDX_RLC )
+        -- alu_8_cmd_join(IDX_RR  )
+        -- alu_8_cmd_join(IDX_RRC )
         --
         --
         --
