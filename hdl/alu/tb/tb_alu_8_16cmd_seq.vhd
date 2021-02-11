@@ -142,13 +142,14 @@ architecture beh of tb is
     constant IDX_RR     : integer := 14;
     constant IDX_RRC    : integer := 15;
 
-    signal alu_8_cmd_join   : std_logic_vector(15 downto 0); 
+    signal alu_8_cmd_join       : std_logic_vector(15 downto 0); 
+    signal alu_8_cmd_join_last  : std_logic_vector(15 downto 0) := (others=>'0'); 
 
 
 
     -- Drive Procedures
     -- ----------------------------------------
-    procedure SWEEP_ALL_FUN (
+    procedure SWEEP_ALL_CMD (
         signal alu_8_cmd_join   : out std_logic_vector(15 downto 0);
         signal alu_8_y_ready    : in  std_logic
     ) is
@@ -237,11 +238,53 @@ architecture beh of tb is
         --
         wait until rising_edge(clk);
         --
-    end procedure SWEEP_ALL_FUN;
+    end procedure SWEEP_ALL_CMD;
 
 
     -- Sef-checking Procedures
     -- ----------------------------------------
+    procedure CHECK_CMD (
+        signal alu_8_op1        : in std_logic_vector(N-1 downto 0);
+        signal alu_8_op2        : in std_logic_vector(N-1 downto 0);
+        signal alu_8_cbin       : in std_logic;
+        signal alu_8_cmd_join   : in std_logic_vector( 15 downto 0);
+        signal alu_8_y          : in std_logic_vector(N-1 downto 0); 
+        signal alu_8_y_mul_l    : in std_logic_vector(N-1 downto 0); 
+        signal alu_8_z          : in std_logic;
+        signal alu_8_c          : in std_logic;
+        signal alu_8_v          : in std_logic;
+        signal alu_8_s          : in std_logic;
+        signal alu_8_p          : in std_logic;
+        --
+        variable err            : out integer
+    ) is
+        variable aux_int        : integer;
+        variable aux_std_logic  : integer;
+        variable check_err      : integer;
+    begin
+        --
+        check_err := 0;
+        --
+        -- ======== fun independent checks
+        --
+        -- zero flag
+        if TO_INTEGER(unsigned(alu_8_y)) = 0 then
+            if alu_8_z /= '1' then
+                REPORT "expected alu_8_z '1' got " & std_logic'image(alu_8_z)
+                SEVERITY ERROR;
+                check_err := check_err + 1;
+            end if;
+        end if;
+        --
+        --
+        --
+        --
+        --
+        err := check_err;
+        --
+    end procedure CHECK_CMD;
+
+
 
 
 begin
@@ -368,7 +411,7 @@ begin
             alu_8_op1 <= std_logic_vector(TO_UNSIGNED(i,N));
             for j in 0 to 2**N-1 loop
                 alu_8_op2 <= std_logic_vector(TO_UNSIGNED(j,N));
-                SWEEP_ALL_FUN(alu_8_cmd_join, alu_8_y_ready);
+                SWEEP_ALL_CMD(alu_8_cmd_join, alu_8_y_ready);
             end loop;
         end loop;
         --
@@ -385,7 +428,7 @@ begin
             alu_8_op1 <= std_logic_vector(TO_UNSIGNED(i,N));
             for j in 0 to 2**N-1 loop
                 alu_8_op2 <= std_logic_vector(TO_UNSIGNED(j,N));
-                SWEEP_ALL_FUN(alu_8_cmd_join, alu_8_y_ready);
+                SWEEP_ALL_CMD(alu_8_cmd_join, alu_8_y_ready);
             end loop;
         end loop;
         --
@@ -427,6 +470,37 @@ begin
 
     -- Check Process (on clk falling edge)
     -- ----------------------------------------
-         
+    proc_check: process(clk, rst)
+        --
+        variable err                : integer := 0;
+        variable check_err          : integer := 0;
+    begin
+        if tcase=-1 then -- update the error counter
+            --
+            check_err_counter   <= check_err;
+            --
+        elsif falling_edge(clk) and rst /= RST_POL then
+            if unsigned(alu_8_cmd_join) /= 0 then
+                alu_8_cmd_join_last <= alu_8_cmd_join; -- momorize the fired command 
+            elsif alu_8_y_ready = '1' and unsigned(alu_8_cmd_join_last) /= 0 then
+                CHECK_CMD (  
+                    alu_8_op1       ,
+                    alu_8_op2       ,
+                    alu_8_cbin      ,
+                    alu_8_cmd_join_last , -- (last) memorized cmd
+                    alu_8_y         ,
+                    alu_8_y_mul_l   ,
+                    alu_8_z         ,
+                    alu_8_c         ,
+                    alu_8_v         ,
+                    alu_8_s         ,
+                    alu_8_p         ,
+                    err             );
+                --
+                check_err   := check_err + err;
+                --
+            end if;
+        end if;
+    end process proc_check;
          
 end beh;
