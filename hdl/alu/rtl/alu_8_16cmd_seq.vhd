@@ -109,7 +109,7 @@ architecture rtl of alu_8_16cmd_seq is
     signal cmd_join     : std_logic_vector( 15 downto 0);
     signal cmd_buf      : std_logic_vector( 15 downto 0);
     --
-    signal cmd_timer    : integer range 0 to N-1;
+    signal cmd_timer    : unsigned(integer(CEIL(LOG2(real(N))))-1 downto 0);
     signal cmd_busy     : std_logic;
 
     -- adder subtractor
@@ -197,7 +197,7 @@ begin
             cbin_buf    <= '0';
             cmd_buf     <= (others=>'0');
             --
-            cmd_timer   <= 0;
+            cmd_timer   <= (others=>'0');
             cmd_busy    <= '0';
         elsif rising_edge(clk) then
             if cmd_busy='0' then
@@ -215,11 +215,11 @@ begin
                 case TO_INTEGER(unsigned(cmd_buf)) is
                     when 4 => -- cmd_mul
                         if cmd_timer=N-1 then -- ready
-                            cmd_timer   <= 0;
+                            cmd_timer   <= (others=>'0');
                             cmd_busy    <= '0';
                         end if;
                     when others =>
-                        cmd_timer   <= 0;
+                        cmd_timer   <= (others=>'0');
                         cmd_busy    <= '0';
                 end case;
             end if;
