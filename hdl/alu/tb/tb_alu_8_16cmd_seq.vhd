@@ -290,9 +290,96 @@ architecture beh of tb is
             -- unconstrained unsigned operation
             aux_int := TO_INTEGER(unsigned(alu_8_op1)) + TO_INTEGER(unsigned(alu_8_op2));
             --
-            -- if alu_8_cbin='1' then
-            --     aux_int := aux_int + 1;
-            -- end if;
+            -- carry flag
+            if aux_int > (2**N)-1 then
+                if alu_8_c /= '1' then
+                    REPORT "expected alu_8_c '1' got " & std_logic'image(alu_8_c)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            else
+                if alu_8_c /= '0' then
+                    REPORT "expected alu_8_c '0' got " & std_logic'image(alu_8_c)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            end if;
+            --
+            -- N-bit operation
+            aux_int :=  aux_int mod 2**N;
+            --
+            -- correct result
+            if TO_INTEGER(unsigned(alu_8_y)) /= aux_int then
+                REPORT "expected alu_8_y " & integer'image(aux_int) & " got " & integer'image(TO_INTEGER(unsigned(alu_8_y)))
+                SEVERITY ERROR;
+                check_err := check_err + 1;
+            end if;
+            --
+            -- sign flag
+            if TO_INTEGER(unsigned(alu_8_y)) >= 2**(N-1) then
+                if alu_8_s /= '1' then
+                    REPORT "expected alu_8_s '1' got " & std_logic'image(alu_8_s)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            else
+                if alu_8_s /= '0' then
+                    REPORT "expected alu_8_s '0' got " & std_logic'image(alu_8_s)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            end if;
+            --
+            -- unconstrained signed operation
+            aux_int :=  TO_INTEGER(signed(alu_8_op1)) + TO_INTEGER(signed(alu_8_op2));
+            --
+            -- c2 overflow flag
+            if aux_int < -(2**(N-1)) or aux_int > (2**(N-1))-1 then
+                if alu_8_v /= '1' then
+                    REPORT "expected alu_8_v '1' got " & std_logic'image(alu_8_v)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            else
+                if alu_8_v /= '0' then
+                    REPORT "expected alu_8_v '0' got " & std_logic'image(alu_8_v)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            end if;
+            --
+            -- even parity flag
+            aux_int := 0;
+            for i in alu_8_y'range loop
+                if alu_8_y(i)='1' then
+                    aux_int := aux_int + 1;
+                end if;
+            end loop;
+            if (aux_int mod 2)=0 then
+                if alu_8_p /= '0' then
+                    REPORT "expected alu_8_p '0' got " & std_logic'image(alu_8_p)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            else
+                if alu_8_p /= '1' then
+                    REPORT "expected alu_8_p '1' got " & std_logic'image(alu_8_p)
+                    SEVERITY ERROR;
+                    check_err := check_err + 1;
+                end if;
+            end if;
+            --
+        end if;
+        --
+        --
+        if alu_8_cmd_join(IDX_ADDC) then
+            --
+            -- unconstrained unsigned operation
+            aux_int := TO_INTEGER(unsigned(alu_8_op1)) + TO_INTEGER(unsigned(alu_8_op2));
+            --
+            if alu_8_cbin='1' then
+                aux_int := aux_int + 1;
+            end if;
             --
             -- carry flag
             if aux_int > (2**N)-1 then
@@ -337,9 +424,9 @@ architecture beh of tb is
             -- unconstrained signed operation
             aux_int :=  TO_INTEGER(signed(alu_8_op1)) + TO_INTEGER(signed(alu_8_op2));
             --
-            -- if alu_8_cbin='1' then
-            --     aux_int     := aux_int + 1;
-            -- end if;
+            if alu_8_cbin='1' then
+                aux_int     := aux_int + 1;
+            end if;
             --
             -- c2 overflow flag
             if aux_int < -(2**(N-1)) or aux_int > (2**(N-1))-1 then
@@ -381,9 +468,6 @@ architecture beh of tb is
         --
         --
         --
-        --
-        --
-        -- alu_8_cmd_join(IDX_ADDC)
         -- alu_8_cmd_join(IDX_SUB )
         -- alu_8_cmd_join(IDX_SUBB)
         -- alu_8_cmd_join(IDX_MUL )
@@ -605,9 +689,9 @@ begin
                 alu_8_cmd_join_last <= alu_8_cmd_join; -- momorize the fired command 
             elsif alu_8_y_ready = '1' and unsigned(alu_8_cmd_join_last) /= 0 then
                 CHECK_CMD (  
-                    alu_8_op1       ,
-                    alu_8_op2       ,
-                    alu_8_cbin      ,
+                    alu_8_op1       , -- suppose the inputs are not change, only for verification
+                    alu_8_op2       , -- suppose the inputs are not change, only for verification
+                    alu_8_cbin      , -- suppose the inputs are not change, only for verification
                     alu_8_cmd_join_last , -- (last) memorized cmd
                     alu_8_y         ,
                     alu_8_y_mul_l   ,
