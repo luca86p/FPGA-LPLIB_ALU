@@ -157,66 +157,82 @@ architecture beh of tb is
         --
         alu_8_cmd_join <= x"0001";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0002";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0004";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0008";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0010";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0020";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0040";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0080";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0100";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0200";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0400";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"0800";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"1000";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"2000";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"4000";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         alu_8_cmd_join <= x"8000";
         wait until rising_edge(clk);
+        alu_8_cmd_join <= x"0000";
         wait until rising_edge(clk) and alu_8_y_ready='1';
         --
         wait until rising_edge(clk);
@@ -294,7 +310,7 @@ begin
             c               => alu_8_c          ,
             v               => alu_8_v          ,
             s               => alu_8_s          ,
-            p               => alu_8_s       
+            p               => alu_8_p       
         );
 
 
