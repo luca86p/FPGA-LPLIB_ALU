@@ -81,11 +81,11 @@ begin
 
     -- cmd_f = "000"  : cmd_and     (op1 & op2)
     -- cmd_f = "001"  : cmd_or      (op1 | op2)
-    -- cmd_f = "010"  : cmd_add     (op1 + op2)
+    -- cmd_f = "010"  : cmd_add     (op1 + op2 + cbin)
     -- cmd_f = "011"  : cmd_srl     (op1 >> 1 (insert 0))
     -- cmd_f = "100"  : cmd_and*    (op1 & !op2)
     -- cmd_f = "101"  : cmd_or*     (op1 | !op2)
-    -- cmd_f = "110"  : cmd_sub     (op1 - op2)
+    -- cmd_f = "110"  : cmd_sub     (op1 - op2 - cbin)
     -- cmd_f = "111"  : cmd_sra     (op1 >> 1 (insert MSB))
 
     -- op1, op2 pre-logic
@@ -121,8 +121,8 @@ begin
     y_s     <= y_and    when cmd_f_1_0="00"  else
                y_or     when cmd_f_1_0="01"  else
                y_sum    when cmd_f_1_0="10"  else
-               y_sr     when cmd_f_1_0="11"  else
-               (others=>'X'); -- what does the synthesizer? (maybe delete the line)
+               y_sr     ; --when cmd_f_1_0="11"  else
+               --(others=>'X'); -- what does the synthesizer? (maybe delete the line)
     --           
     y       <= y_s;
 
@@ -131,8 +131,8 @@ begin
     z       <=  '1' when unsigned(y_s)=0 else '0';
     --
     c       <=  c_chain(N) xor cmd_f(2) when cmd_f(0)='0' else 
-                op1(0)                  when cmd_f(0)='1' else
-                'X'; -- what does the synthesizer? (maybe delete the line)
+                op1(0)                  ; --when cmd_f(0)='1' else
+                --'X'; -- what does the synthesizer? (maybe delete the line)
     --
     v       <=  c_chain(N) xor c_chain(N-1);
     --
