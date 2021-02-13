@@ -52,8 +52,8 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
 
         case {'add'}
             # unconstrained result
-            res_UN = op1_UN + op2_UN; # + cbin;
-            res_SG = op1_SG + op2_SG; # + cbin;
+            res_UN = op1_UN + op2_UN;
+            res_SG = op1_SG + op2_SG;
             # carry flag
             c = res_UN > MAX_UN;
             # c2 overflow falg
@@ -74,27 +74,82 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
             # even parity flag
             # p = mod(sum(dec2bin(res_UN)=='1'),2);
             p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
+        case {'addc'}
+            # unconstrained result
+            res_UN = op1_UN + op2_UN + cbin;
+            res_SG = op1_SG + op2_SG + cbin;
+            # carry flag
+            c = res_UN > MAX_UN;
+            # c2 overflow falg
+            v = res_SG > MAX_SG || res_SG < MIN_SG;
+            # N-bit unsigned result
+            res_UN = mod(res_UN,2^N);
+            # N-bit   signed result
+            if res_SG>MAX_SG
+              res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+              res_SG = res_SG+2^N;
+            endif
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            # s = bitand(res_UN, MAX_SG+1)>0;
+            s = res_SG < 0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
+        case {'sub'}
+            # unconstrained result
+            res_UN = op1_UN - op2_UN;
+            res_SG = op1_SG - op2_SG;
+            # carry flag
+            c = res_UN < MIN_UN;
+            # c2 overflow falg
+            v = res_SG > MAX_SG || res_SG < MIN_SG;
+            # N-bit unsigned result
+            res_UN = mod(res_UN,2^N);
+            # N-bit   signed result
+            if res_SG>MAX_SG
+              res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+              res_SG = res_SG+2^N;
+            endif
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            # s = bitand(res_UN, MAX_SG+1)>0;
+            s = res_SG < 0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
+        case {'subb'}
+            # unconstrained result
+            res_UN = op1_UN - op2_UN - cbin;
+            res_SG = op1_SG - op2_SG - cbin;
+            # carry flag
+            c = res_UN < MIN_UN;
+            # c2 overflow falg
+            v = res_SG > MAX_SG || res_SG < MIN_SG;
+            # N-bit unsigned result
+            res_UN = mod(res_UN,2^N);
+            # N-bit   signed result
+            if res_SG>MAX_SG
+              res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+              res_SG = res_SG+2^N;
+            endif
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            # s = bitand(res_UN, MAX_SG+1)>0;
+            s = res_SG < 0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
           
-  % case {'sub'}
-  %       res_UN = op1_UN - op2_UN - cbin;
-  %       res_SG = op1_SG - op2_SG - cbin;
-  %       #
-  %       c = res_UN < MIN_UN;
-  %       v = res_SG > MAX_SG || res_SG < MIN_SG;
-  %       #
-  %       # Adjust results
-  %       res_UN = mod(res_UN, MAX_UN+1);
-  %       if res_SG>MAX_SG
-  %         res_SG = res_SG-2^N;
-  %       elseif res_SG<MIN_SG
-  %         res_SG = res_SG+2^N;
-  %       endif
-  %       #
-  %       z = res_UN == 0;
-  %       #s = bitand(res_UN, MAX_SG+1)>0;
-  %       s = res_SG < 0;
-  %       #p = mod(sum(dec2bin(res_UN)=='1'),2);
-  %       p = mod(sum(dec2bin(res_UN)),2); # faster
          
   % case {'and'}
   %       res_UN = bitand(op1_UN,op2_UN);

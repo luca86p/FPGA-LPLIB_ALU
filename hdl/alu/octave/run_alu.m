@@ -1,3 +1,5 @@
+#!/usr/bin/octave
+
 clc
 clear
 close all
@@ -15,8 +17,8 @@ MIN_SG = -2^(N-1);
 op1 = MIN_UN:MAX_UN;
 op2 = MIN_UN:MAX_UN;
 
-% cmd = {'add','sub','and','or','xor'};
-cmd = {'add'};
+% ---- List of implemented commands to verify
+cmd = {'add','addc','sub','subb'};
 
 
 % ---- Output preallocation
