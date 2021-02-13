@@ -19,7 +19,6 @@
 #       printline
 #       here
 #       printlogo
-#       printlogo_KI
 #       printinfo
 #       gettag
 #       testanddel
@@ -94,33 +93,6 @@ function printlogo {
     return
 }
 
-
-function printlogo_KI {
-	  echo '# ============================================================================ #'
-	  echo '#                              .::/+++//:-                                     #'
-	  echo '#                        `:/ -yyyyyyys/-``-::.                                 #'
-	  echo '#                      -+yy+ +yyyyy+. ./syyyyys:`                              #'
-	  echo '#                    .oyyyy-`yyyy+. .oyyyyyyyyyys:                             #'
-	  echo '#                   /yyyyyy`-yyy:  /yyyyyyyyyyyyyyo`                           #'
-	  echo '#                  /yyyyyyo /yy-  /yyyyyyyyyyyyyyyyo`                          #'
-	  echo '#                 -yyyyyyy+ oy/  .yyyyyyyyyyyyyyyyyy+                          #'
-	  echo '#                 oyyyyyyy/ sy`  -yyyyyyyyyyyyyyyyyyy`                         #'
-	  echo '#                `yyyyyyyy: so   -yyyyyyyyyyyyyyyyyyy-                         #'
-	  echo '#                `yyyyyyyy: so    oyyyyyyyyyyyyyyyyyy-                         #'
-	  echo '#                 oyyyyyyy/ sy`   .syyyyyyyyyyyyyyyyy`                         #'
-	  echo '#                 .yyyyyyy+ +y+    `+yyyyyyyyyyyyyyy/                          #'
-	  echo '#                  :yyyyyys /yy:     .+syyyyyyyyyyy+                           #'
-	  echo '#                   -syyyyy`.yyy/`     `-/+ssyyyys/                            #'
-	  echo '#                    `/yyyy-`syyyo-         ``````                             #'
-	  echo '#                      `/sy+ +yyyyyo:`                                         #'
-	  echo '#                         .: .yyyyyyyyo/-                                      #'
-	  echo '#                             `.--::::-.`                                      #'
-	  echo '#                                                                              #'
-	  echo '#                            KAYSER ITALIA                                     #'
-	  echo '#                                                                              #'
-	  echo '# ============================================================================ #'
-    return
-}
 
 
 
