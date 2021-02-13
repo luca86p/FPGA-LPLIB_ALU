@@ -198,7 +198,7 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
             # zero flag
             z = res_UN == 0;
             # sign flag
-            s = bitand(res_UN, 2^(N-1))>0;
+            s = bitget(res_UN, N);
             # even parity flag
             # p = mod(sum(dec2bin(res_UN)=='1'),2);
             p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
@@ -220,7 +220,7 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
             # zero flag
             z = res_UN == 0;
             # sign flag
-            s = bitand(res_UN, 2^(N-1))>0;
+            s = bitget(res_UN, N);
             # even parity flag
             # p = mod(sum(dec2bin(res_UN)=='1'),2);
             p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
@@ -242,7 +242,7 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
             # zero flag
             z = res_UN == 0;
             # sign flag
-            s = bitand(res_UN, 2^(N-1))>0;
+            s = bitget(res_UN, N);
             # even parity flag
             # p = mod(sum(dec2bin(res_UN)=='1'),2);
             p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
@@ -264,40 +264,85 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
             # zero flag
             z = res_UN == 0;
             # sign flag
-            s = bitand(res_UN, 2^(N-1))>0;
+            s = bitget(res_UN, N);
+            # s = bitand(res_UN, 2^(N-1))>0;
             # even parity flag
             # p = mod(sum(dec2bin(res_UN)=='1'),2);
             p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
 
-        
-  %   case {'xor'}
-  %       res_UN = bitxor(op1_UN,op2_UN);
-  %       res_SG = res_UN;
-  %       #
-  %       c = 0;
-  %       v = 0;
-  %       #
-  %       # Adjust results
-  %       res_UN = mod(res_UN, MAX_UN+1);
-  %       if res_SG>MAX_SG
-  %         res_SG = res_SG-2^N;
-  %       elseif res_SG<MIN_SG
-  %         res_SG = res_SG+2^N;
-  %       endif
-  %       #
-  %       z = res_UN == 0;
-  %       #s = bitand(res_UN, MAX_SG+1)>0;
-  %       s = res_SG < 0;
-  %       #p = mod(sum(dec2bin(res_UN)=='1'),2);
-  %       p = mod(sum(dec2bin(res_UN)),2); # faster
-        
-##    case {'sll'}
-##        res = bitshift(op1,1);
-##        flags(1) = res > MAX_UN;
-##        flags(2) = 0;
-##        res = mod(res,2^Nbit);
-##        flags(3) = res == 0;
-##        flags(4) = res > MAX_SG;
+        case {'xnor'}
+            # unconstrained result
+            res_UN = bitcmp(bitxor(op1_UN,op2_UN),N);
+            res_SG = res_UN;
+            # N-bit   signed result
+            if res_SG>MAX_SG
+                res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+                res_SG = res_SG+2^N;
+            endif
+            # carry flag
+            c = 0;
+            # c2 overflow falg
+            v = 0;
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            s = bitget(res_UN, N);
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
+        case {'sll'}
+            # unconstrained result
+            res_UN = bitshift(op1_UN,1);
+            res_SG = res_UN;
+            # N-bit unsigned result
+            res_UN = mod(res_UN,2^N);
+            # N-bit   signed result
+            if res_SG>MAX_SG
+              res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+              res_SG = res_SG+2^N;
+            endif
+            # carry flag
+            c = bitget(op1_UN, N);
+            # c2 overflow falg
+            v = 0;
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            # s = bitand(res_UN, MAX_SG+1)>0;
+            s = res_SG < 0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
+        case {'srl'}
+            # unconstrained result
+            res_UN = bitshift(op1_UN,-1);
+            res_SG = res_UN;
+            # N-bit unsigned result
+            res_UN = mod(res_UN,2^N);
+            # N-bit   signed result
+            if res_SG>MAX_SG
+              res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+              res_SG = res_SG+2^N;
+            endif
+            # carry flag
+            c = bitget(op1_UN, 1);
+            # c2 overflow falg
+            v = 0;
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            # s = bitand(res_UN, MAX_SG+1)>0;
+            s = res_SG < 0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
+
 ##        
 ##    case {'srl'}
 ##        res = bitshift(op1,-1);
