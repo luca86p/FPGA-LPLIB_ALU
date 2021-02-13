@@ -149,29 +149,46 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
             # even parity flag
             # p = mod(sum(dec2bin(res_UN)=='1'),2);
             p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
+        case {'mul'}
+            # unconstrained result
+            res_UN = floor(op1_UN*op2_UN/2^N);
+            res_SG = NaN;
+            # carry flag
+            c = 0;
+            # c2 overflow falg
+            v = 0;
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            s = bitand(res_UN, 2^(N-1))>0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
           
-         
-  % case {'and'}
-  %       res_UN = bitand(op1_UN,op2_UN);
-  %       res_SG = res_UN;
-  %       #
-  %       c = 0;
-  %       v = 0;
-  %       #
-  %       # Adjust results
-  %       res_UN = mod(res_UN, MAX_UN+1);
-  %       if res_SG>MAX_SG
-  %         res_SG = res_SG-2^N;
-  %       elseif res_SG<MIN_SG
-  %         res_SG = res_SG+2^N;
-  %       endif
-  %       #
-  %       z = res_UN == 0;
-  %       #s = bitand(res_UN, MAX_SG+1)>0;
-  %       s = res_SG < 0;
-  %       #p = mod(sum(dec2bin(res_UN)=='1'),2);
-  %       p = mod(sum(dec2bin(res_UN)),2); # faster
-        
+        case {'and'}
+            # unconstrained result
+            res_UN = bitand(op1_UN,op2_UN);
+            res_SG = res_UN;
+            # N-bit   signed result
+            if res_SG>MAX_SG
+                res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+                res_SG = res_SG+2^N;
+            endif
+            # carry flag
+            c = 0;
+            # c2 overflow falg
+            v = 0;
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            s = bitand(res_UN, 2^(N-1))>0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
+
   %   case {'or'}
   %       res_UN = bitor(op1_UN,op2_UN);
   %       res_SG = res_UN;

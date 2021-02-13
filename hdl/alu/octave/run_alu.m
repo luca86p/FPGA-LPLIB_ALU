@@ -18,7 +18,7 @@ op1 = MIN_UN:MAX_UN;
 op2 = MIN_UN:MAX_UN;
 
 % ---- List of implemented commands to verify
-cmd = {'add','addc','sub','subb'};
+cmd = {'add','addc','sub','subb','mul','and'};
 
 
 % ---- Output preallocation
@@ -32,11 +32,10 @@ flags1 = zeros(numel(op1),numel(op2),numel(cmd),5);
 for i = 1:numel(op1)
     for ii = 1:numel(op2)
         for iii = 1:numel(cmd)
-            [res0(i,ii,iii), z0(i,ii,iii,:), c0(i,ii,iii,:), v0(i,ii,iii,:), s0(i,ii,iii,:), p0(i,ii,iii,:)] = fun_alu(N, op1(i), op2(ii), 0, cmd{iii});
-            # cbin = 0
-            #[res0(i,ii,iii), flags0(i,ii,iii,:)] = alu(N, op1(i), op2(ii), 0, cmd{iii});
-            # cbin = 1
-            #[res1(i,ii,iii), flags1(i,ii,iii,:)] = alu(N, op1(i), op2(ii), 1, cmd{iii});
+            cbin = 0
+            [res0(i,ii,iii), z0(i,ii,iii,:), c0(i,ii,iii,:), v0(i,ii,iii,:), s0(i,ii,iii,:), p0(i,ii,iii,:)] = fun_alu(N, op1(i), op2(ii), cbin, cmd{iii});
+            cbin = 1
+            [res1(i,ii,iii), z1(i,ii,iii,:), c1(i,ii,iii,:), v1(i,ii,iii,:), s1(i,ii,iii,:), p1(i,ii,iii,:)] = fun_alu(N, op1(i), op2(ii), cbin, cmd{iii});
         end
     end
 end
