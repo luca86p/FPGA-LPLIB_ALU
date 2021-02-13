@@ -47,7 +47,7 @@ op1 = MIN_UN:MAX_UN;
 op2 = MIN_UN:MAX_UN;
 
 % ---- List of implemented commands to verify
-cmd = {'add','addc','sub','subb','mul','and','or','xor','xnor','sll','srl','sra'};
+cmd = {'add','addc','sub','subb','mul','and','or','xor','xnor','sll','srl','sra','rl','rlc','rr','rrc'};
 
 
 % ---- Output preallocation

@@ -367,8 +367,12 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
             # p = mod(sum(dec2bin(res_UN)=='1'),2);
             p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
                 
+
+        % 'rl','rlc','rr','rrc'
+
     otherwise
-        disp('ERROR: cmd not recognised');
+        disp(["ERROR: cmd '" cmd "' not recognised"]);
+        return
   
   endswitch
 
