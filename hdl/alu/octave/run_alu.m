@@ -1,4 +1,33 @@
 #!/usr/bin/octave
+% =============================================================================
+% Whatis        : octave running script for bit-true model of alu_8_16cmd_seq
+% Project       : 
+% -----------------------------------------------------------------------------
+% File          : run_alu.m
+% Language      : octave
+% Module        : 
+% Library       : 
+% -----------------------------------------------------------------------------
+% Author(s)     : Luca Pilato <pilato[punto]lu[chiocciola]gmail[punto]com>
+%                 
+% Company       : 
+% Addr          : 
+% -----------------------------------------------------------------------------
+% Description
+% 
+% -----------------------------------------------------------------------------
+% Dependencies
+% 
+% -----------------------------------------------------------------------------
+% Issues
+% 
+% -----------------------------------------------------------------------------
+% Copyright (c) 2021 Luca Pilato
+% MIT License
+% -----------------------------------------------------------------------------
+% date        who               changes
+% 2016-07-01  Luca Pilato       file creation
+% =============================================================================
 
 clc
 clear
@@ -18,7 +47,7 @@ op1 = MIN_UN:MAX_UN;
 op2 = MIN_UN:MAX_UN;
 
 % ---- List of implemented commands to verify
-cmd = {'add','addc','sub','subb','mul','and'};
+cmd = {'add','addc','sub','subb','mul','and','or','xor'};
 
 
 % ---- Output preallocation

@@ -10,6 +10,37 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
 %   y        : result in integer unsigned representation
 %   z, c, v, s, p : flags
 
+% =============================================================================
+% Whatis        : octave callable function
+% Project       : 
+% -----------------------------------------------------------------------------
+% File          : fun_alu.m
+% Language      : octave
+% Module        : fun_alu
+% Library       : 
+% -----------------------------------------------------------------------------
+% Author(s)     : Luca Pilato <pilato[punto]lu[chiocciola]gmail[punto]com>
+%                 
+% Company       : 
+% Addr          : 
+% -----------------------------------------------------------------------------
+% Description
+%
+%   bit-true model of alu_8_16cmd_seq functionalities
+% 
+% -----------------------------------------------------------------------------
+% Dependencies
+% 
+% -----------------------------------------------------------------------------
+% Issues
+% 
+% -----------------------------------------------------------------------------
+% Copyright (c) 2021 Luca Pilato
+% MIT License
+% -----------------------------------------------------------------------------
+% date        who               changes
+% 2016-07-01  Luca Pilato       file creation
+% =============================================================================
 
     MAX_UN = 2^N-1;
     MIN_UN = 0;
@@ -153,7 +184,13 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
         case {'mul'}
             # unconstrained result
             res_UN = floor(op1_UN*op2_UN/2^N);
-            res_SG = NaN;
+            res_SG = res_UN;
+            # N-bit   signed result
+            if res_SG>MAX_SG
+                res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+                res_SG = res_SG+2^N;
+            endif
             # carry flag
             c = 0;
             # c2 overflow falg
@@ -188,27 +225,50 @@ function [ y, z, c, v, s, p ] = fun_alu( N, op1, op2, cbin, cmd )
             # p = mod(sum(dec2bin(res_UN)=='1'),2);
             p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
 
+        case {'or'}
+            # unconstrained result
+            res_UN = bitor(op1_UN,op2_UN);
+            res_SG = res_UN;
+            # N-bit   signed result
+            if res_SG>MAX_SG
+                res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+                res_SG = res_SG+2^N;
+            endif
+            # carry flag
+            c = 0;
+            # c2 overflow falg
+            v = 0;
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            s = bitand(res_UN, 2^(N-1))>0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
 
-  %   case {'or'}
-  %       res_UN = bitor(op1_UN,op2_UN);
-  %       res_SG = res_UN;
-  %       #
-  %       c = 0;
-  %       v = 0;
-  %       #
-  %       # Adjust results
-  %       res_UN = mod(res_UN, MAX_UN+1);
-  %       if res_SG>MAX_SG
-  %         res_SG = res_SG-2^N;
-  %       elseif res_SG<MIN_SG
-  %         res_SG = res_SG+2^N;
-  %       endif
-  %       #
-  %       z = res_UN == 0;
-  %       #s = bitand(res_UN, MAX_SG+1)>0;
-  %       s = res_SG < 0;
-  %       #p = mod(sum(dec2bin(res_UN)=='1'),2);
-  %       p = mod(sum(dec2bin(res_UN)),2); # faster
+        case {'xor'}
+            # unconstrained result
+            res_UN = bitxor(op1_UN,op2_UN);
+            res_SG = res_UN;
+            # N-bit   signed result
+            if res_SG>MAX_SG
+                res_SG = res_SG-2^N;
+            elseif res_SG<MIN_SG
+                res_SG = res_SG+2^N;
+            endif
+            # carry flag
+            c = 0;
+            # c2 overflow falg
+            v = 0;
+            # zero flag
+            z = res_UN == 0;
+            # sign flag
+            s = bitand(res_UN, 2^(N-1))>0;
+            # even parity flag
+            # p = mod(sum(dec2bin(res_UN)=='1'),2);
+            p = mod(sum(dec2bin(res_UN)),2); # ASCII-trick faster
+
         
   %   case {'xor'}
   %       res_UN = bitxor(op1_UN,op2_UN);
