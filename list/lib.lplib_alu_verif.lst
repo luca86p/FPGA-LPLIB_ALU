@@ -12,11 +12,16 @@
 
 # -- find ../hdl/lfsr -type f | grep tb_
 # ------------------------------------------------------------------------------
-#runc../hdl/lfsr/tb/tb_lfsr.vhd
+#../hdl/lfsr/tb/tb_lfsr.vhd
 
 
 # -- find ../hdl/alu -type f | grep tb_
 # ------------------------------------------------------------------------------
 #../hdl/alu/tb/tb_alu_1_addsub.vhd
 #../hdl/alu/tb/tb_alu_2_4fun.vhd
-../hdl/alu/tb/tb_alu_8_16cmd_seq.vhd
+#../hdl/alu/tb/tb_alu_8_16cmd_seq.vhd
+
+
+# -- find ../hdl/div -type f | grep tb_
+# ------------------------------------------------------------------------------
+../hdl/div/tb/tb_div_un_par_ab.vhd
