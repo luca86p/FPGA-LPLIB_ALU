@@ -30,4 +30,5 @@
 
 # -- find ../hdl/mul -type f | grep tb_
 # ------------------------------------------------------------------------------
-../hdl/mul/tb/tb_mul_un_par.vhd
+#../hdl/mul/tb/tb_mul_un_par.vhd
+../hdl/mul/tb/tb_mul_un_ser.vhd

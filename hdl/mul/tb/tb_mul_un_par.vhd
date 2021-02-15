@@ -194,7 +194,7 @@ begin
         --
         --
         a <= std_logic_vector(TO_UNSIGNED(0,N));
-        b <= std_logic_vector(TO_UNSIGNED(0,N));
+        b <= std_logic_vector(TO_UNSIGNED(0,M));
         c <= std_logic_vector(TO_UNSIGNED(0,N));
         d <= std_logic_vector(TO_UNSIGNED(0,N+M));
         --
