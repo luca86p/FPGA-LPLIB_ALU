@@ -127,7 +127,7 @@ begin
 
     -- result-high
     -- ---------------------------------
-    lastS   <= '0' & S_matrix(M-1)(N-1 downto 1);
+    lastS   <= d(N+M-1) & S_matrix(M-1)(N-1 downto 1);
     lastC   <= C_matrix(M-1)(N-1 downto 0);
 
     cchain(0) <= '0';

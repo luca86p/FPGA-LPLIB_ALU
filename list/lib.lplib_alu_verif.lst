@@ -24,5 +24,10 @@
 
 # -- find ../hdl/div -type f | grep tb_
 # ------------------------------------------------------------------------------
-../hdl/div/tb/tb_div_un_par_ab.vhd
-../hdl/div/tb/tb_div_un_ser_ab.vhd
+#../hdl/div/tb/tb_div_un_par_ab.vhd
+#../hdl/div/tb/tb_div_un_ser_ab.vhd
+
+
+# -- find ../hdl/mul -type f | grep tb_
+# ------------------------------------------------------------------------------
+../hdl/mul/tb/tb_mul_un_par.vhd

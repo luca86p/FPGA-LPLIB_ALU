@@ -2,7 +2,7 @@
 -- Whatis        : testbench
 -- Project       : 
 -- -----------------------------------------------------------------------------
--- File          : tb_div_un_ser_ab.vhd
+-- File          : tb_mul_un_par.vhd
 -- Language      : VHDL-93
 -- Module        : tb
 -- Library       : lplib_alu_verif
@@ -27,7 +27,7 @@
 -- MIT License
 -- -----------------------------------------------------------------------------
 -- date        who               changes
--- 2020-12-22  Luca Pilato       file creation
+-- 2016-07-01  Luca Pilato       file creation
 -- =============================================================================
 
 
@@ -53,7 +53,6 @@ end entity tb;
 
 
 architecture beh of tb is
-
 
     -- TB common parameters and signals
     -- ----------------------------------------
@@ -83,25 +82,31 @@ architecture beh of tb is
 
     -- Constant
     -- ----------------------------------------
-    constant N       : positive := 4;
+    constant N       : positive := 2;
+    constant M       : positive := 2; -- IMPORTANT N<=M
 
 
     -- Signals
     -- ----------------------------------------
+
     signal a            : std_logic_vector(N-1 downto 0);
-    signal b            : std_logic_vector(N-1 downto 0) := (others=>'1'); -- SYA to aviod division by 0 errors
-    signal q            : std_logic_vector(N-1 downto 0);
-    signal q_un         : unsigned(N-1 downto 0);
-    signal r            : std_logic_vector(N-1 downto 0);
-    signal r_un         : unsigned(N-1 downto 0);
-    signal req          : std_logic;
-    signal rdy          : std_logic;
+    signal b            : std_logic_vector(M-1 downto 0);
+    signal c            : std_logic_vector(M-1 downto 0);
+    signal d            : std_logic_vector(N+M-1 downto 0);
+    --
+    signal z_ab         : std_logic_vector(N+M-1 downto 0);
+    signal z_abc        : std_logic_vector(N+M-1 downto 0);
+    signal z_abcd       : std_logic_vector(N+M-1 downto 0);
 
 
     -- Verification
     ----------------------------------------
-    signal check_q_int  : integer;
-    signal check_r_int  : integer;   
+    signal z_ab_un      : unsigned(N+M-1 downto 0);
+    signal z_abc_un     : unsigned(N+M-1 downto 0);
+    signal z_abcd_un    : unsigned(N+M-1 downto 0);
+
+
+
 
 begin
 
@@ -128,37 +133,53 @@ begin
 
     -- Unit(s) Under Test
     -- ----------------------------------------
-    i_uut: entity lplib_alu.div_un_ser_ab(rtl)
+    i_mul_un_par_ab: entity lplib_alu.mul_un_par_ab(rtl)
         generic map (
-            N       => N
+            N       => N    ,
+            M       => M
         )
         port map (
-            clk     => clk      ,
-            rst     => rst      ,
-            a       => a        ,
-            b       => b        ,
-            q       => q        ,
-            r       => r        ,  
-            req     => req      ,  
-            rdy     => rdy        
+            a       => a    ,
+            b       => b    ,
+            z       => z_ab
         );
 
-    q_un    <= unsigned(q);
-    r_un    <= unsigned(r);
+    z_ab_un    <= unsigned(z_ab);
 
 
-    check_q_int <= TO_INTEGER(unsigned(a)) / TO_INTEGER(unsigned(b))   ;
-    check_r_int <= TO_INTEGER(unsigned(a)) mod TO_INTEGER(unsigned(b)) ;
+    i_mul_un_par_abc: entity lplib_alu.mul_un_par_abc(rtl)
+        generic map (
+            N       => N    ,
+            M       => M
+        )
+        port map (
+            a       => a    ,
+            b       => b    ,
+            c       => c    ,
+            z       => z_abc
+        );
+
+    z_abc_un    <= unsigned(z_abc);
 
 
-    -- HARD check (not working here)
-    -- ----------------------------------------   
-    -- ASSERT q_un=check_q_int
-    --     REPORT "q NOT EQUAL to expected"
-    --         SEVERITY FAILURE; 
-    -- ASSERT r_un=check_r_int
-    --     REPORT "r NOT EQUAL to expected"
-    --         SEVERITY FAILURE; 
+    i_mul_un_par_abcd: entity lplib_alu.mul_un_par_abcd(rtl)
+        generic map (
+            N       => N    ,
+            M       => M
+        )
+        port map (
+            a       => a    ,
+            b       => b    ,
+            c       => c    ,
+            d       => d    ,
+            z       => z_abcd
+        );
+
+    z_abcd_un    <= unsigned(z_abcd);
+
+
+
+
 
 
     -- Drive Process
@@ -171,9 +192,12 @@ begin
         en_clk      <= '0';
         rst         <= RST_POL;
         --
+        --
         a <= std_logic_vector(TO_UNSIGNED(0,N));
-        b <= std_logic_vector(TO_UNSIGNED(1,N)); -- SYA to aviod division by 0 errors
-        req         <= '0';
+        b <= std_logic_vector(TO_UNSIGNED(0,N));
+        c <= std_logic_vector(TO_UNSIGNED(0,N));
+        d <= std_logic_vector(TO_UNSIGNED(0,N+M));
+        --
         --
         wait for 123 ns;
         en_clk     <= '1';
@@ -191,32 +215,39 @@ begin
         --
         for i in 0 to 2**N-1 loop
             a <= std_logic_vector(TO_UNSIGNED(i,N));
-            for j in 1 to 2**N-1 loop
-                b <= std_logic_vector(TO_UNSIGNED(j,N));
-                req         <= '1';
-                wait until rising_edge(clk);
-                req         <= '0';
-                --
-                wait until rising_edge(clk) and rdy='1';
-                --                
-                if q_un /= check_q_int then
-                    REPORT "expected q " & integer'image(check_q_int) & " got " & integer'image(TO_INTEGER(q_un))
-                    SEVERITY ERROR;
-                    err_counter <= err_counter + 1;
-                end if;
-                --
-                if r_un /= check_r_int then
-                    REPORT "expected r " & integer'image(check_r_int) & " got " & integer'image(TO_INTEGER(r_un))
-                    SEVERITY ERROR;
-                    err_counter <= err_counter + 1;
-                end if;
-                --
+            for j in 0 to 2**M-1 loop
+                b <= std_logic_vector(TO_UNSIGNED(j,M));
+                for k in 0 to 2**N-1 loop
+                    c <= std_logic_vector(TO_UNSIGNED(k,N));
+                    for h in 0 to 2**(N+M)-1 loop
+                        d <= std_logic_vector(TO_UNSIGNED(h,N+M));
+                        wait until rising_edge(clk);
+                        --
+                        if z_ab_un /= i*j then
+                            REPORT "expected z_ab " & integer'image(i*j) & " got " & integer'image(TO_INTEGER(z_ab_un))
+                            SEVERITY ERROR;
+                            err_counter <= err_counter + 1;
+                        end if;
+                        --
+                        if z_abc_un /= i*j+k then
+                            REPORT "expected z_abc " & integer'image(i*j+k) & " got " & integer'image(TO_INTEGER(z_abc_un))
+                            SEVERITY ERROR;
+                            err_counter <= err_counter + 1;
+                        end if;
+                        --
+                        if z_abcd_un /= ((i*j+k+h) mod 2**(N+M)) then
+                            REPORT "expected z_abcd " & integer'image((i*j+k+h) mod 2**(N+M)) & " got " & integer'image(TO_INTEGER(z_abcd_un))
+                            SEVERITY ERROR;
+                            err_counter <= err_counter + 1;
+                        end if;
+                        --
+                    end loop;
+                end loop;
             end loop;
         end loop;
         --
         wait for 1 us;
         wait until rising_edge(clk);
-        --
         --
         -- ======== Power Off
         tcase   <= -1;

@@ -43,7 +43,17 @@
 ../hdl/alu/rtl/alu_7_16cmd.vhd
 ../hdl/alu/rtl/alu_8_16cmd_seq.vhd
 
+
 # -- find ../hdl/div -type f
 # ------------------------------------------------------------------------------
 ../hdl/div/rtl/div_un_par_ab.vhd
 ../hdl/div/rtl/div_un_ser_ab.vhd
+
+
+# -- find ../hdl/mul -type f
+# ------------------------------------------------------------------------------
+../hdl/mul/rtl/mul_sg_par_bw_ab.vhd
+../hdl/mul/rtl/mul_un_par_ab.vhd
+../hdl/mul/rtl/mul_un_par_abc.vhd
+../hdl/mul/rtl/mul_un_par_abcd.vhd
+../hdl/mul/rtl/mul_un_ser_ab.vhd
