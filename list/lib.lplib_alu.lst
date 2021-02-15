@@ -42,3 +42,8 @@
 ../hdl/alu/rtl/alu_6_8fun.vhd
 ../hdl/alu/rtl/alu_7_16cmd.vhd
 ../hdl/alu/rtl/alu_8_16cmd_seq.vhd
+
+# -- find ../hdl/div -type f
+# ------------------------------------------------------------------------------
+../hdl/div/rtl/div_un_par_ab.vhd
+../hdl/div/rtl/div_un_ser_ab.vhd
