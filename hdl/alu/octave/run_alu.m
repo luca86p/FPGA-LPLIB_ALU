@@ -109,16 +109,3 @@ for i_op1 = 1:numel(op1)
     end
 end
 fclose(fid);
-
-
-% for iii = 1:numel(cmd)
-%   for i = 1:numel(op1)
-%       for ii = 1:numel(op2)  
-%             fprintf(formatSpec, ...
-%                 cmd{iii}, op1(i), op2(ii), 0, res0(i,ii,iii), flags0(i,ii,iii,:));
-%             fprintf(formatSpec, ...
-%                 cmd{iii}, op1(i), op2(ii), 1, res1(i,ii,iii), flags1(i,ii,iii,:));
-%         end
-%     end
-%     disp('----')
-% end
